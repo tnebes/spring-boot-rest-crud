@@ -6,14 +6,13 @@ import java.util.Locale;
 
 public class Util {
 
-    private static final String CURRENT_LOCALE_NAME = "hr-HR";
     private static final Locale CURRENT_LOCALE = getLocale();
 
     private Util() {
     }
 
     public static Locale getLocale() {
-        return Locale.forLanguageTag(CURRENT_LOCALE_NAME);
+        return Locale.forLanguageTag(Constants.CURRENT_LOCALE_NAME);
     }
 
     public static BigDecimal localiseReturnBigDecimal(String inputDecimalNumber) {
