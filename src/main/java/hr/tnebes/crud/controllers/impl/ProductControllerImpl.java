@@ -110,7 +110,10 @@ public class ProductControllerImpl implements ProductController {
     @GetMapping(value = "/availability/{isAvailable}")
     @Override
     public List<ProductModel> getProductsByAvailability(@PathVariable(name = "isAvailable") final Boolean isAvailable) {
-        return null;
+        if (isAvailable == null) {
+            return Collections.emptyList();
+        }
+        return productRepository.findAllByIsAvailable(isAvailable);
     }
 
     private List<ProductModel> getProductsByPrice(final String price, final Util.Currency selectedCurrency) {

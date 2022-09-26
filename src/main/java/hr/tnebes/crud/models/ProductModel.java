@@ -39,7 +39,7 @@ public class ProductModel {
     private String description;
 
     @NonNull
-    @Column(name = "is_available")
+    @Column(name = Constants.PRODUCT_IS_AVAILABLE_COLUMN_NAME)
     private Boolean available;
 
 }
