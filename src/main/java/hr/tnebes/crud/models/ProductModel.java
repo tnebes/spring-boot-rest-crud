@@ -39,6 +39,6 @@ public class ProductModel {
 
     @NonNull
     @Column(name = "is_available")
-    private boolean available;
+    private Boolean available;
 
 }
