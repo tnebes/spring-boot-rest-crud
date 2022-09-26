@@ -16,4 +16,5 @@ public interface ProductRepository extends JpaRepository<ProductModel, Long> {
 
     @Query("SELECT p FROM " + Constants.PRODUCT_ENTITY_NAME + " p WHERE p.code IN ?1")
     List<ProductModel> findAllByCodes(final List<String> codes);
+
 }

@@ -15,9 +15,9 @@ public interface ProductController {
 
     List<ProductModel> getProductsByName(final String name);
 
-    List<ProductModel> getProductsByPriceHrk(final BigDecimal priceHrk);
+    List<ProductModel> getProductsByPriceHrk(final String priceHrk);
 
-    List<ProductModel> getProductsByPriceEur(final BigDecimal priceEur);
+    List<ProductModel> getProductsByPriceEur(final String priceEur);
 
     List<ProductModel> getProductsByDescription(final String description);
 

@@ -1,5 +1,6 @@
 package hr.tnebes.crud.models;
 
+import hr.tnebes.crud.utils.Constants;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,24 +16,23 @@ import static hr.tnebes.crud.utils.Constants.PRODUCT_ENTITY_NAME;
 @RequiredArgsConstructor
 public class ProductModel {
 
-    @Transient
-    public static final int CODE_LENGTH = 10;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
-    @Column(length = CODE_LENGTH, unique = true)
+    @Column(length = Constants.PRODUCT_CODE_LENGTH, unique = true)
     private String code;
 
     @NonNull
     private String name;
 
     @NonNull
+    @Column(name = Constants.PRODUCT_PRICE_HRK_COLUMN_NAME)
     private BigDecimal priceHrk;
 
     @NonNull
+    @Column(name = Constants.PRODUCT_PRICE_EUR_COLUMN_NAME)
     private BigDecimal priceEur;
 
     @NonNull
