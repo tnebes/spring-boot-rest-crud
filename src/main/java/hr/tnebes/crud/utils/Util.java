@@ -6,6 +6,10 @@ import java.util.Locale;
 
 public class Util {
 
+    public enum Currency {
+        HRK, EUR
+    }
+
     private static final Locale CURRENT_LOCALE = getLocale();
 
     private Util() {

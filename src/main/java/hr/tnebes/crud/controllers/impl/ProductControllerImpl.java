@@ -5,16 +5,16 @@ import hr.tnebes.crud.models.ProductModel;
 import hr.tnebes.crud.repository.ProductRepository;
 import hr.tnebes.crud.services.ProductService;
 import hr.tnebes.crud.utils.Constants;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collections;
+import hr.tnebes.crud.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController()
@@ -51,7 +51,7 @@ public class ProductControllerImpl implements ProductController {
 
     @GetMapping(value = "/codes/{codes}")
     @Override
-    public List<ProductModel> getProductsByCodes(@PathVariable(name="codes") final String code) {
+    public List<ProductModel> getProductsByCodes(@PathVariable(name = "codes") final String code) {
         if (code == null || code.isBlank()) {
             return Collections.emptyList();
         }
@@ -91,36 +91,38 @@ public class ProductControllerImpl implements ProductController {
 
     @GetMapping(value = "/priceHrk/{priceHrk}")
     @Override
-    // TODO rewrite so that this and the below methods are abstract as possible.
-    // redirect the input to the service. The service should only return the BigDecimal.
-    // if the BigDecimal is null, return an empty list.
-    public List<ProductModel> getProductsByPriceHrk(@PathVariable(name="priceHrk") final String priceHrk) {
-        if (priceHrk == null || priceHrk.isBlank()) {
-            return Collections.emptyList();
-        }
-        BigDecimal bigDecimalPriceHrk = this.productService.stringToBigDecimal(priceHrk);
-        if (bigDecimalPriceHrk == null) {
-            return Collections.emptyList();
-        }
-        return productRepository.findAllByPrice(bigDecimalPriceHrk, Constants.PRODUCT_PRICE_HRK_COLUMN_NAME);
-
+    public List<ProductModel> getProductsByPriceHrk(@PathVariable(name = "priceHrk") final String priceHrk) {
+        return this.getProductsByPrice(priceHrk, Util.Currency.HRK);
     }
 
     @GetMapping(value = "/priceEur/{priceEur}")
     @Override
-    public List<ProductModel> getProductsByPriceEur(@PathVariable(name="priceEur") final String priceEur) {
-        return null;
+    public List<ProductModel> getProductsByPriceEur(@PathVariable(name = "priceEur") final String priceEur) {
+        return this.getProductsByPrice(priceEur, Util.Currency.EUR);
     }
 
     @GetMapping(value = "/description/{description}")
     @Override
-    public List<ProductModel> getProductsByDescription(@PathVariable(name="description") final String description) {
+    public List<ProductModel> getProductsByDescription(@PathVariable(name = "description") final String description) {
         return null;
     }
 
     @GetMapping(value = "/availability/{isAvailable}")
     @Override
-    public List<ProductModel> getProductsByAvailability(@PathVariable(name="isAvailable") final Boolean isAvailable) {
+    public List<ProductModel> getProductsByAvailability(@PathVariable(name = "isAvailable") final Boolean isAvailable) {
         return null;
     }
+
+    private List<ProductModel> getProductsByPrice(final String price, final Util.Currency selectedCurrency) {
+        BigDecimal bigDecimalPrice = this.productService.stringToBigDecimal(price);
+        if (bigDecimalPrice == null) {
+            return Collections.emptyList();
+        }
+        return switch (selectedCurrency) {
+            case HRK -> productRepository.findAllByPriceHrk(bigDecimalPrice);
+            case EUR -> productRepository.findAllByPriceEur(bigDecimalPrice);
+            default -> Collections.emptyList();
+        };
+    }
+
 }
