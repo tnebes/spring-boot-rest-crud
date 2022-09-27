@@ -11,9 +11,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"hr.tnebes.crud.services.impl", "hr.tnebes.crud.repository"})
-@EntityScan(basePackages = {"hr.tnebes.crud.models"})
-@EnableJpaRepositories(basePackages = {"hr.tnebes.crud.repository"})
+@ComponentScan(basePackages = {
+        "hr.tnebes.crud.services.*",
+        "hr.tnebes.crud.controllers.*",
+        "hr.tnebes.crud.repository"})
+@EntityScan(basePackages = "hr.tnebes.crud.models")
+@EnableJpaRepositories(basePackages = "hr.tnebes.crud.repository")
 @Slf4j
 public class CrudApplication {
 
@@ -24,7 +27,7 @@ public class CrudApplication {
     @Bean
     public CommandLineRunner commandLineRunner(FakerService fakerService) {
         return args -> {
-            fakerService.generateProducts(10);
+            fakerService.generateProducts(25);
         };
     }
 
