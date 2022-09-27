@@ -69,24 +69,13 @@ public class ProductControllerImpl implements ProductController {
         return productRepository.findAllByCodes(codes);
     }
 
-    @GetMapping(value = "/names/{names}")
+    @GetMapping(value = "/name/{name}")
     @Override
-    public List<ProductModel> getProductsByName(@PathVariable(name = "names") final String names) {
-        if (names == null || names.isBlank()) {
+    public List<ProductModel> getProductsByName(@PathVariable(name = "name") final String name) {
+        if (name == null || name.isBlank()) {
             return Collections.emptyList();
         }
-        List<String> namesList = Arrays.stream(names.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isBlank())
-                .map(s -> s.toLowerCase())
-                .toList();
-        if (namesList.isEmpty()) {
-            return Collections.emptyList();
-        }
-        if (namesList.size() == 1) {
-            throw new UnsupportedOperationException("Not implemented yet");
-        }
-        throw new UnsupportedOperationException("Not implemented yet");
+        return productRepository.findAllByName(name.trim().toLowerCase(Util.CURRENT_LOCALE));
     }
 
     @GetMapping(value = "/priceHrk/{priceHrk}")
@@ -104,7 +93,10 @@ public class ProductControllerImpl implements ProductController {
     @GetMapping(value = "/description/{description}")
     @Override
     public List<ProductModel> getProductsByDescription(@PathVariable(name = "description") final String description) {
-        return null;
+        if (description == null || description.isBlank()) {
+            return Collections.emptyList();
+        }
+        return productRepository.findAllByDescription(description.trim().toLowerCase(Util.CURRENT_LOCALE));
     }
 
     @GetMapping(value = "/availability/{isAvailable}")

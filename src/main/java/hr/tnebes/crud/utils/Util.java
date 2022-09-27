@@ -10,7 +10,7 @@ public class Util {
         HRK, EUR
     }
 
-    private static final Locale CURRENT_LOCALE = getLocale();
+    public static final Locale CURRENT_LOCALE = getLocale();
 
     private Util() {
     }

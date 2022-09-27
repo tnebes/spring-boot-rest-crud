@@ -27,7 +27,7 @@ public class CrudApplication {
     @Bean
     public CommandLineRunner commandLineRunner(FakerService fakerService) {
         return args -> {
-            fakerService.generateProducts(10);
+            fakerService.generateProducts(25);
         };
     }
 
