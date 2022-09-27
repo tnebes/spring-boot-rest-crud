@@ -24,4 +24,5 @@ public class Util {
         String decimalSeparator = String.valueOf(decimalFormatSymbols.getDecimalSeparator());
         return new BigDecimal(inputDecimalNumber.replace(decimalSeparator, "."));
     }
+
 }

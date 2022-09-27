@@ -18,4 +18,5 @@ public class Constants {
     @Transient
     public static final String PRODUCT_PRICE_EUR_COLUMN_NAME = "price_eur";
     public static final String PRODUCT_IS_AVAILABLE_COLUMN_NAME = "is_available";
+
 }
