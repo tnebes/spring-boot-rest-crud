@@ -17,15 +17,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@RestController()
+@RestController
 @RequestMapping(Constants.API_V1 + "/" + Constants.PRODUCT_ENTITY_NAME)
 public class ProductControllerImpl implements ProductController {
 
     @Autowired
-    private ProductRepository productRepository;
+    ProductControllerImpl(final ProductRepository productRepository, final ProductService productService) {
+        this.productRepository = productRepository;
+        this.productService = productService;
+    }
 
-    @Autowired
-    private ProductService productService;
+    private final ProductRepository productRepository;
+
+    private final ProductService productService;
 
     @GetMapping
     @Override

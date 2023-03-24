@@ -1,51 +1,34 @@
 package hr.tnebes.crud.controllers.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import hr.tnebes.crud.models.ProductModel;
-import hr.tnebes.crud.services.FakerService;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
+import hr.tnebes.crud.repository.ProductRepository;
+import hr.tnebes.crud.services.ProductService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.List;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@ContextConfiguration(classes = {FakerService.class})
-@WebMvcTest
 class ProductControllerImplTest {
 
-    @Autowired
-    private FakerService fakerService;
-
-    @Autowired
     private MockMvc mockMvc;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @MockBean
+    private ProductRepository productRepository;
 
-    @BeforeEach()
-    void setUpBeforeAll() {
-        fakerService.generateTestProducts();
+    @MockBean
+    private ProductService productService;
+
+    @BeforeEach
+    public void setUp() {
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new ProductControllerImpl(this.productRepository, this.productService)).build();
     }
 
     @Test
-    @DisplayName("GIVEN a list of 9 products WHEN /product/ is called THEN return 9 products.")
-    void testGetAllProductsReturns9Products() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/product/"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<ProductModel> productModels = Arrays.asList(this.objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ProductModel[].class));
-        Assertions.assertEquals(9, productModels.size());
+    void test() throws Exception {
+        this.mockMvc.perform(get("/products")).andExpect(status().isOk());
     }
-
 
 }

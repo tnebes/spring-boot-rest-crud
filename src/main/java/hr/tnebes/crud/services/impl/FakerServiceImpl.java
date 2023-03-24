@@ -3,7 +3,6 @@ package hr.tnebes.crud.services.impl;
 import hr.tnebes.crud.models.ProductModel;
 import hr.tnebes.crud.utils.FakerUtil;
 import hr.tnebes.crud.utils.Util;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import hr.tnebes.crud.repository.ProductRepository;
 import hr.tnebes.crud.services.FakerService;
@@ -16,8 +15,11 @@ import java.util.stream.IntStream;
 @Service
 public class FakerServiceImpl implements FakerService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    public FakerServiceImpl(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    private final ProductRepository productRepository;
 
     @Override
     public void generateProducts(int count) {
