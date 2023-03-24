@@ -2,7 +2,6 @@ package hr.tnebes.crud.controllers;
 
 import hr.tnebes.crud.models.ProductModel;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductController {

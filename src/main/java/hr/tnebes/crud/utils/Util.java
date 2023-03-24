@@ -6,10 +6,6 @@ import java.util.Locale;
 
 public class Util {
 
-    public enum Currency {
-        HRK, EUR
-    }
-
     public static final Locale CURRENT_LOCALE = getLocale();
 
     private Util() {
@@ -23,6 +19,10 @@ public class Util {
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(CURRENT_LOCALE);
         String decimalSeparator = String.valueOf(decimalFormatSymbols.getDecimalSeparator());
         return new BigDecimal(inputDecimalNumber.replace(decimalSeparator, "."));
+    }
+
+    public enum Currency {
+        HRK, EUR
     }
 
 }
