@@ -14,13 +14,10 @@ public class Constants {
 
     public static final String CURRENCY_REGEX_PATTERN = "^(\\d{1,3}(,\\d{3})*|(\\d+))(\\.\\d{2}||(\\d+))(\\.\\d{1})?$";
 
-    @Transient
     public static final int PRODUCT_CODE_LENGTH = 10;
 
-    @Transient
     public static final String PRODUCT_PRICE_HRK_COLUMN_NAME = "price_hrk";
 
-    @Transient
     public static final String PRODUCT_PRICE_EUR_COLUMN_NAME = "price_eur";
 
     public static final String PRODUCT_IS_AVAILABLE_COLUMN_NAME = "is_available";

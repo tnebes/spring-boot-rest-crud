@@ -12,11 +12,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public BigDecimal stringToBigDecimal(String inputDecimalNumber) {
-        if (this.validateInputString(inputDecimalNumber)) {
-            return new BigDecimal(inputDecimalNumber);
-        } else {
-            return null;
+        if (!this.validateInputString(inputDecimalNumber)) {
+            throw new IllegalArgumentException("Invalid input decimal number: " + inputDecimalNumber);
         }
+        return new BigDecimal(inputDecimalNumber.replace(",", ""));
     }
 
     private boolean validateInputString(final String inputDecimalNumber) {

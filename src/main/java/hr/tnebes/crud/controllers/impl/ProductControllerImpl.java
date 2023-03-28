@@ -37,6 +37,7 @@ public class ProductControllerImpl implements ProductController {
     public List<ProductModel> getAllProducts() {
         return this.productRepository.findAll();
     }
+
     @GetMapping(value = "/{ids}")
     @Override
     public List<ProductModel> getProductsByIds(@PathVariable(name = "ids") final String ids) {
@@ -93,13 +94,13 @@ public class ProductControllerImpl implements ProductController {
         return this.productRepository.findAllByDescription(description.trim().toLowerCase(Util.CURRENT_LOCALE));
     }
 
-    @GetMapping(value = "/availability/{isAvailable}")
+    @GetMapping(value = "/availability/{availability}")
     @Override
-    public List<ProductModel> getProductsByAvailability(@PathVariable(name = "isAvailable") final Boolean isAvailable) {
-        if (isAvailable == null) {
+    public List<ProductModel> getProductsByAvailability(@PathVariable(name = "availability") final Boolean availability) {
+        if (availability == null) {
             return Collections.emptyList();
         }
-        return this.productRepository.findAllByIsAvailable(isAvailable);
+        return this.productRepository.findAllByAvailability(availability);
     }
 
     private List<ProductModel> getProductsByPrice(final String price, final Util.Currency selectedCurrency) {

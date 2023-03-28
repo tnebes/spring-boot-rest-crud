@@ -32,6 +32,6 @@ public interface ProductRepository extends JpaRepository<ProductModel, Long> {
     List<ProductModel> findAllByPriceEur(@Param("price") BigDecimal bigDecimalPrice);
 
     @Query("SELECT p FROM " + Constants.PRODUCT_ENTITY_NAME + " p WHERE " + Constants.PRODUCT_IS_AVAILABLE_COLUMN_NAME + " = :availability")
-    List<ProductModel> findAllByIsAvailable(@Param("availability") Boolean isAvailable);
+    List<ProductModel> findAllByAvailability(@Param("availability") Boolean isAvailable);
 
 }
