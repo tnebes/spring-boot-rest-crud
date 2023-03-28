@@ -6,6 +6,7 @@ import hr.tnebes.crud.repository.ProductRepository;
 import hr.tnebes.crud.services.ProductService;
 import hr.tnebes.crud.utils.Constants;
 import hr.tnebes.crud.utils.Util;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +37,6 @@ public class ProductControllerImpl implements ProductController {
     public List<ProductModel> getAllProducts() {
         return this.productRepository.findAll();
     }
-
     @GetMapping(value = "/{ids}")
     @Override
     public List<ProductModel> getProductsByIds(@PathVariable(name = "ids") final String ids) {
@@ -44,39 +44,29 @@ public class ProductControllerImpl implements ProductController {
             return Collections.emptyList();
         }
         List<Long> idsList = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
-        if (idsList.isEmpty()) {
-            return Collections.emptyList();
-        }
-        if (idsList.size() == 1) {
-            return Collections.singletonList(this.productRepository.findById(idsList.get(0)).orElse(null));
-        }
         return this.productRepository.findAllById(idsList);
     }
 
     @GetMapping(value = "/codes/{codes}")
     @Override
     public List<ProductModel> getProductsByCodes(@PathVariable(name = "codes") final String code) {
-        if (code == null || code.isBlank()) {
+        if (StringUtils.isBlank(code)) {
             return Collections.emptyList();
         }
+
         List<String> codes = Arrays.stream(code.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
-                .filter(s -> s.length() != Constants.PRODUCT_CODE_LENGTH)
+                .filter(s -> s.length() == Constants.PRODUCT_CODE_LENGTH)
                 .toList();
-        if (codes.isEmpty()) {
-            return Collections.emptyList();
-        }
-        if (codes.size() == 1) {
-            return Collections.singletonList(this.productRepository.findByCode(codes.get(0)));
-        }
+
         return this.productRepository.findAllByCodes(codes);
     }
 
     @GetMapping(value = "/name/{name}")
     @Override
     public List<ProductModel> getProductsByName(@PathVariable(name = "name") final String name) {
-        if (name == null || name.isBlank()) {
+        if (StringUtils.isBlank(name)) {
             return Collections.emptyList();
         }
         return this.productRepository.findAllByName(name.trim().toLowerCase(Util.CURRENT_LOCALE));
@@ -97,7 +87,7 @@ public class ProductControllerImpl implements ProductController {
     @GetMapping(value = "/description/{description}")
     @Override
     public List<ProductModel> getProductsByDescription(@PathVariable(name = "description") final String description) {
-        if (description == null || description.isBlank()) {
+        if (StringUtils.isBlank(description)) {
             return Collections.emptyList();
         }
         return this.productRepository.findAllByDescription(description.trim().toLowerCase(Util.CURRENT_LOCALE));

@@ -37,23 +37,19 @@ public class FakerServiceImpl implements FakerService {
 
     @Override
     public void generateFakeProducts(int count) {
-        IntStream.range(0, count).forEach(i -> {
-            this.productRepository.save(
-                    new ProductModel(
-                            FakerUtil.faker.code().ean8(),
-                            FakerUtil.faker.commerce().productName(),
-                            Util.localiseReturnBigDecimal(FakerUtil.faker.commerce().price()),
-                            Util.localiseReturnBigDecimal(FakerUtil.faker.commerce().price()),
-                            FakerUtil.faker.lorem().sentence(),
-                            FakerUtil.faker.bool().bool()
-                    )
-            );
-        });
+        IntStream.range(0, count).forEach(i -> this.productRepository.save(
+                new ProductModel(FakerUtil.faker.code().ean8(),
+                        FakerUtil.faker.commerce().productName(),
+                        Util.localiseReturnBigDecimal(FakerUtil.faker.commerce().price()),
+                        Util.localiseReturnBigDecimal(FakerUtil.faker.commerce().price()),
+                        FakerUtil.faker.lorem().sentence(),
+                        FakerUtil.faker.bool().bool())
+                ));
     }
 
     @Override
     public void generateTestProducts() {
-        List<ProductModel> products = generateFakeTestProductList();
+        List<ProductModel> products = this.generateFakeTestProductList();
         this.productRepository.saveAll(products);
     }
 }
