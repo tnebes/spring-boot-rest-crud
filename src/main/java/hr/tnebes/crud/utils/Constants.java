@@ -1,7 +1,5 @@
 package hr.tnebes.crud.utils;
 
-import javax.persistence.Transient;
-
 public class Constants {
 
     public static final String CURRENT_LOCALE_NAME = "hr-HR";

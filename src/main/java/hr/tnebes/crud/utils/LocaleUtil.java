@@ -4,12 +4,8 @@ import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-public class Util {
-
+public class LocaleUtil {
     public static final Locale CURRENT_LOCALE = getLocale();
-
-    private Util() {
-    }
 
     public static Locale getLocale() {
         return Locale.forLanguageTag(Constants.CURRENT_LOCALE_NAME);
@@ -20,9 +16,4 @@ public class Util {
         String decimalSeparator = String.valueOf(decimalFormatSymbols.getDecimalSeparator());
         return new BigDecimal(inputDecimalNumber.replace(decimalSeparator, "."));
     }
-
-    public enum Currency {
-        HRK, EUR
-    }
-
 }
