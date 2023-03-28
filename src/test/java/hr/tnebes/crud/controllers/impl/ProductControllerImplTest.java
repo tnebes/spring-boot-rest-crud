@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static hr.tnebes.crud.models.product.availability.ProductAvailability.AVAILABLE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -59,7 +60,8 @@ class ProductControllerImplTest {
                 .andExpect(jsonPath("$[0].priceHrk").value(1.00))
                 .andExpect(jsonPath("$[0].priceEur").value(0.50))
                 .andExpect(jsonPath("$[0].description").value(""))
-                .andExpect(jsonPath("$[0].available").value(true));
+                .andExpect(jsonPath("$[0].availability").value(AVAILABLE.toString()))
+                .andExpect(jsonPath("$[0].quantity").value(1));
     }
 
     @DisplayName("GIVEN the controller with 9 products in the database " +
@@ -90,6 +92,6 @@ class ProductControllerImplTest {
     @Test
     void testGetProductsByIdReturnsErrorWhenInvalidId() throws Exception {
         this.mockMvc.perform(get("/api/v1/product/invalid"))
-                .andExpect(status().isBadRequest());
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 }

@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static hr.tnebes.crud.models.product.availability.ProductAvailability.AVAILABLE;
+import static hr.tnebes.crud.models.product.availability.ProductAvailability.NOT_AVAILABLE;
+
 @Service
 public class FakerServiceImpl implements FakerService {
 
@@ -23,27 +26,28 @@ public class FakerServiceImpl implements FakerService {
 
     public List<ProductModel> generateFakeTestProductList() {
         List<ProductModel> products = new ArrayList<>();
-        products.add(new ProductModel("1234567800", "Test product 1", new BigDecimal("1.00"), new BigDecimal("0.50"), "", true));
-        products.add(new ProductModel("1234567900", "Test product 2", new BigDecimal("2.00"), new BigDecimal("1.00"), "Test product 2 description", false));
-        products.add(new ProductModel("1234567000", "Test product 3", new BigDecimal("3.00"), new BigDecimal("1.50"), "Test product 3 description", true));
-        products.add(new ProductModel("1234567100", "Test product 4", new BigDecimal("4.00"), new BigDecimal("2.00"), "Test product 4 description", false));
-        products.add(new ProductModel("1234567200", "Test product 5", new BigDecimal("5.00"), new BigDecimal("2.50"), "Test product 5 description", true));
-        products.add(new ProductModel("1234567300", "Test product 6", new BigDecimal("6.00"), new BigDecimal("3.00"), "Test product 6 description", false));
-        products.add(new ProductModel("1234567400", "Test product 7", new BigDecimal("7.00"), new BigDecimal("3.50"), "Test product 7 description", true));
-        products.add(new ProductModel("1234567500", "Test product 8", new BigDecimal("8.00"), new BigDecimal("4.00"), "Test product 8 description", false));
-        products.add(new ProductModel("1234567600", "Test product 9", new BigDecimal("9.00"), new BigDecimal("4.50"), "Test product 9 description", true));
+        products.add(new ProductModel( 1L, "1234567800", "Test product 1", new BigDecimal("1.00"), new BigDecimal("0.50"), "", AVAILABLE, 1));
+        products.add(new ProductModel( 2L, "1234567801", "Test product 2", new BigDecimal("2.00"), new BigDecimal("1.00"), "", NOT_AVAILABLE, 2));
+        products.add(new ProductModel( 3L, "1234567802", "Test product 3", new BigDecimal("3.00"), new BigDecimal("1.50"), "", AVAILABLE, 3));
+        products.add(new ProductModel( 4L, "1234567803","Test product 4", new BigDecimal("4.00"), new BigDecimal("2.00"), "", NOT_AVAILABLE, -1));
+        products.add(new ProductModel( 5L, "1234567804", "Test product 5", new BigDecimal("5.00"), new BigDecimal("2.50"), "", AVAILABLE, 6));
+        products.add(new ProductModel( 6L, "1234567805", "Test product 6", new BigDecimal("6.00"), new BigDecimal("3.00"), "", NOT_AVAILABLE, 6));
+        products.add(new ProductModel( 7L, "1234567806", "Test product 7", new BigDecimal("7.00"), new BigDecimal("3.50"), "", AVAILABLE, 10));
+        products.add(new ProductModel( 8L, "1234567807", "Test product 8", new BigDecimal("8.00"), new BigDecimal("4.00"), "", NOT_AVAILABLE, 11));
+        products.add(new ProductModel( 9L, "1234567808", "Test product 9", new BigDecimal("9.00"), new BigDecimal("4.50"), "", AVAILABLE, 15));
         return products;
     }
 
     @Override
     public void generateFakeProducts(int count) {
         IntStream.range(0, count).forEach(i -> this.productRepository.save(
-                new ProductModel(FakerUtil.faker.code().ean8(),
+                new ProductModel((long) i,FakerUtil.faker.code().ean8(),
                         FakerUtil.faker.commerce().productName(),
                         Util.localiseReturnBigDecimal(FakerUtil.faker.commerce().price()),
                         Util.localiseReturnBigDecimal(FakerUtil.faker.commerce().price()),
                         FakerUtil.faker.lorem().sentence(),
-                        FakerUtil.faker.bool().bool())
+                        FakerUtil.faker.bool().bool() ? AVAILABLE : NOT_AVAILABLE,
+                        FakerUtil.faker.number().numberBetween(0, 100))
                 ));
     }
 
