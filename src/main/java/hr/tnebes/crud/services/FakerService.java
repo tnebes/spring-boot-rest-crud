@@ -1,9 +1,14 @@
 package hr.tnebes.crud.services;
 
-import org.springframework.stereotype.Service;
+import hr.tnebes.crud.models.ProductModel;
+
+import java.util.List;
 
 public interface FakerService {
 
-    void generateProducts(int count);
+    List<ProductModel> generateFakeTestProductList();
 
+    void generateFakeProducts(int count);
+
+    void generateTestProducts();
 }

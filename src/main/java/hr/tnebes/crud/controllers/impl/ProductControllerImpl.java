@@ -6,6 +6,7 @@ import hr.tnebes.crud.repository.ProductRepository;
 import hr.tnebes.crud.services.ProductService;
 import hr.tnebes.crud.utils.Constants;
 import hr.tnebes.crud.utils.Util;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,22 +18,25 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@RestController()
+@RestController
 @RequestMapping(Constants.API_V1 + "/" + Constants.PRODUCT_ENTITY_NAME)
 public class ProductControllerImpl implements ProductController {
 
     @Autowired
-    private ProductRepository productRepository;
+    ProductControllerImpl(final ProductRepository productRepository, final ProductService productService) {
+        this.productRepository = productRepository;
+        this.productService = productService;
+    }
 
-    @Autowired
-    private ProductService productService;
+    private final ProductRepository productRepository;
+
+    private final ProductService productService;
 
     @GetMapping
     @Override
     public List<ProductModel> getAllProducts() {
-        return productRepository.findAll();
+        return this.productRepository.findAll();
     }
-
     @GetMapping(value = "/{ids}")
     @Override
     public List<ProductModel> getProductsByIds(@PathVariable(name = "ids") final String ids) {
@@ -40,42 +44,32 @@ public class ProductControllerImpl implements ProductController {
             return Collections.emptyList();
         }
         List<Long> idsList = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
-        if (idsList.isEmpty()) {
-            return Collections.emptyList();
-        }
-        if (idsList.size() == 1) {
-            return Collections.singletonList(productRepository.findById(idsList.get(0)).orElse(null));
-        }
-        return productRepository.findAllById(idsList);
+        return this.productRepository.findAllById(idsList);
     }
 
     @GetMapping(value = "/codes/{codes}")
     @Override
     public List<ProductModel> getProductsByCodes(@PathVariable(name = "codes") final String code) {
-        if (code == null || code.isBlank()) {
+        if (StringUtils.isBlank(code)) {
             return Collections.emptyList();
         }
+
         List<String> codes = Arrays.stream(code.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
-                .filter(s -> s.length() != Constants.PRODUCT_CODE_LENGTH)
+                .filter(s -> s.length() == Constants.PRODUCT_CODE_LENGTH)
                 .toList();
-        if (codes.isEmpty()) {
-            return Collections.emptyList();
-        }
-        if (codes.size() == 1) {
-            return Collections.singletonList(productRepository.findByCode(codes.get(0)));
-        }
-        return productRepository.findAllByCodes(codes);
+
+        return this.productRepository.findAllByCodes(codes);
     }
 
     @GetMapping(value = "/name/{name}")
     @Override
     public List<ProductModel> getProductsByName(@PathVariable(name = "name") final String name) {
-        if (name == null || name.isBlank()) {
+        if (StringUtils.isBlank(name)) {
             return Collections.emptyList();
         }
-        return productRepository.findAllByName(name.trim().toLowerCase(Util.CURRENT_LOCALE));
+        return this.productRepository.findAllByName(name.trim().toLowerCase(Util.CURRENT_LOCALE));
     }
 
     @GetMapping(value = "/priceHrk/{priceHrk}")
@@ -93,10 +87,10 @@ public class ProductControllerImpl implements ProductController {
     @GetMapping(value = "/description/{description}")
     @Override
     public List<ProductModel> getProductsByDescription(@PathVariable(name = "description") final String description) {
-        if (description == null || description.isBlank()) {
+        if (StringUtils.isBlank(description)) {
             return Collections.emptyList();
         }
-        return productRepository.findAllByDescription(description.trim().toLowerCase(Util.CURRENT_LOCALE));
+        return this.productRepository.findAllByDescription(description.trim().toLowerCase(Util.CURRENT_LOCALE));
     }
 
     @GetMapping(value = "/availability/{isAvailable}")
@@ -105,7 +99,7 @@ public class ProductControllerImpl implements ProductController {
         if (isAvailable == null) {
             return Collections.emptyList();
         }
-        return productRepository.findAllByIsAvailable(isAvailable);
+        return this.productRepository.findAllByIsAvailable(isAvailable);
     }
 
     private List<ProductModel> getProductsByPrice(final String price, final Util.Currency selectedCurrency) {
@@ -114,9 +108,8 @@ public class ProductControllerImpl implements ProductController {
             return Collections.emptyList();
         }
         return switch (selectedCurrency) {
-            case HRK -> productRepository.findAllByPriceHrk(bigDecimalPrice);
-            case EUR -> productRepository.findAllByPriceEur(bigDecimalPrice);
-            default -> Collections.emptyList();
+            case HRK -> this.productRepository.findAllByPriceHrk(bigDecimalPrice);
+            case EUR -> this.productRepository.findAllByPriceEur(bigDecimalPrice);
         };
     }
 
