@@ -1,6 +1,7 @@
 package hr.tnebes.crud.repository;
 
 import hr.tnebes.crud.models.ProductModel;
+import hr.tnebes.crud.models.product.availability.ProductAvailability;
 import hr.tnebes.crud.utils.Constants;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,6 +33,6 @@ public interface ProductRepository extends JpaRepository<ProductModel, Long> {
     List<ProductModel> findAllByPriceEur(@Param("price") BigDecimal bigDecimalPrice);
 
     @Query("SELECT p FROM " + Constants.PRODUCT_ENTITY_NAME + " p WHERE " + Constants.PRODUCT_IS_AVAILABLE_COLUMN_NAME + " = :availability")
-    List<ProductModel> findAllByAvailability(@Param("availability") Boolean isAvailable);
+    List<ProductModel> findAllByAvailability(@Param("availability") ProductAvailability availability);
 
 }

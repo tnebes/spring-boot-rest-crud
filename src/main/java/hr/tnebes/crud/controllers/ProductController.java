@@ -1,6 +1,7 @@
 package hr.tnebes.crud.controllers;
 
 import hr.tnebes.crud.models.ProductModel;
+import hr.tnebes.crud.models.product.availability.ProductAvailability;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public interface ProductController {
 
     List<ProductModel> getProductsByDescription(final String description);
 
-    List<ProductModel> getProductsByAvailability(final Boolean isAvailable);
+    List<ProductModel> getProductsByAvailability(final String availability);
 
 }

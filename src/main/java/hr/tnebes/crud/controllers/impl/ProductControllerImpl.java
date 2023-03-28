@@ -2,6 +2,7 @@ package hr.tnebes.crud.controllers.impl;
 
 import hr.tnebes.crud.controllers.ProductController;
 import hr.tnebes.crud.models.ProductModel;
+import hr.tnebes.crud.models.product.availability.ProductAvailability;
 import hr.tnebes.crud.repository.ProductRepository;
 import hr.tnebes.crud.services.ProductService;
 import hr.tnebes.crud.utils.Constants;
@@ -96,11 +97,17 @@ public class ProductControllerImpl implements ProductController {
 
     @GetMapping(value = "/availability/{availability}")
     @Override
-    public List<ProductModel> getProductsByAvailability(@PathVariable(name = "availability") final Boolean availability) {
-        if (availability == null) {
+    public List<ProductModel> getProductsByAvailability(@PathVariable(name = "availability") final String availability) {
+        if (StringUtils.isBlank(availability)) {
             return Collections.emptyList();
         }
-        return this.productRepository.findAllByAvailability(availability);
+        try {
+            ProductAvailability productAvailability = ProductAvailability.valueOf(availability.toUpperCase());
+            return this.productRepository.findAllByAvailability(productAvailability);
+        } catch (IllegalArgumentException e) {
+            // TODO: return status code 400
+            return Collections.emptyList();
+        }
     }
 
     private List<ProductModel> getProductsByPrice(final String price, final Util.Currency selectedCurrency) {
