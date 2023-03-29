@@ -1,8 +1,6 @@
 package hr.tnebes.crud.utils;
 
-import javax.persistence.Transient;
-
-public class Constants {
+public final class Constants {
 
     public static final String CURRENT_LOCALE_NAME = "hr-HR";
 
@@ -21,6 +19,7 @@ public class Constants {
     public static final String PRODUCT_PRICE_EUR_COLUMN_NAME = "price_eur";
 
     public static final String PRODUCT_IS_AVAILABLE_COLUMN_NAME = "is_available";
+    public static final int FAKE_DATA_COUNT = 25;
 
     private Constants() {
     }

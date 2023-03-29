@@ -1,11 +1,10 @@
 package hr.tnebes.crud.controllers;
 
 import hr.tnebes.crud.models.ProductModel;
-import hr.tnebes.crud.models.product.availability.ProductAvailability;
 
 import java.util.List;
 
-public interface ProductController {
+public interface ProductReadController {
 
     List<ProductModel> getAllProducts();
 
