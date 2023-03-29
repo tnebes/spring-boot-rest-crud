@@ -16,16 +16,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(Constants.API_V1 + "/" + Constants.PRODUCT_ENTITY_NAME)
+@RequestMapping(value = Constants.API_V1 + "/" + Constants.PRODUCT_ENTITY_NAME, produces = "application/json")
 public class ProductControllerImpl implements ProductController {
 
     private final ProductRepository productRepository;
@@ -39,6 +44,16 @@ public class ProductControllerImpl implements ProductController {
         this.productRepository = productRepository;
         this.productService = productService;
         this.productMapper = productMapper;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationException(final MethodArgumentNotValidException exception) {
+        final BindingResult result = exception.getBindingResult();
+        final List<String> errorMessages = result.getFieldErrors().stream()
+                .map(error -> error.getField() + " " + error.getDefaultMessage())
+                .toList();
+        log.error("Validation error: {}", errorMessages);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessages);
     }
 
     @GetMapping
@@ -64,7 +79,7 @@ public class ProductControllerImpl implements ProductController {
             return Collections.emptyList();
         }
 
-        List<String> codes = Arrays.stream(code.split(","))
+        final List<String> codes = Arrays.stream(code.split(","))
                 .map(StringUtils::trim)
                 .filter(s -> !s.isBlank())
                 .filter(s -> s.length() == Constants.PRODUCT_CODE_LENGTH)
@@ -112,7 +127,7 @@ public class ProductControllerImpl implements ProductController {
         try {
             final ProductAvailability productAvailability = ProductAvailability.valueOf(availability.toUpperCase());
             return this.productRepository.findAllByAvailability(productAvailability);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             // TODO: return status code 4xx
             return Collections.emptyList();
         }
@@ -126,12 +141,14 @@ public class ProductControllerImpl implements ProductController {
         };
     }
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<ProductModel> createProduct(final @RequestBody ProductDto productDto) {
+    @Override
+    @PostMapping(consumes = "application/json", produces = "application/json", name = "createProduct", path = "/create")
+    public ResponseEntity<ProductModel> createProduct(@RequestBody @Valid final ProductDto productDto) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.productMapper.toModel(productDto));
+            final ProductModel productModel = this.productMapper.toModel(productDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.productRepository.save(productModel));
         } catch (final RuntimeException e) {
-            log.error("Error while creating product: {}", e.getMessage());
+            log.error("Error while creating product: {}{}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

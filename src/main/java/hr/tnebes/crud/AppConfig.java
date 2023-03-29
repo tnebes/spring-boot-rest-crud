@@ -10,7 +10,6 @@ public class AppConfig {
 
     @Bean
     public Validator validator() {
-        System.out.println("Validator bean created");
         return Validation.buildDefaultValidatorFactory().getValidator();
     }
 

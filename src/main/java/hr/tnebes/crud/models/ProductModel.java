@@ -2,13 +2,13 @@ package hr.tnebes.crud.models;
 
 import hr.tnebes.crud.models.product.availability.ProductAvailability;
 import hr.tnebes.crud.utils.Constants;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
 import static hr.tnebes.crud.utils.Constants.PRODUCT_ENTITY_NAME;
