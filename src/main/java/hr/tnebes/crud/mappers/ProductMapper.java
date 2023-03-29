@@ -2,23 +2,21 @@ package hr.tnebes.crud.mappers;
 
 import hr.tnebes.crud.dtos.ProductDto;
 import hr.tnebes.crud.models.ProductModel;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 import java.util.Set;
 
+@RequiredArgsConstructor
 @Component
 public class ProductMapper {
 
     private final Validator validator;
-
-    @Autowired
-    ProductMapper(final Validator validator) {
-        this.validator = validator;
-    }
 
     public ProductModel toModel(final ProductDto productDto) {
         final Set<ConstraintViolation<ProductDto>> violations = this.validator.validate(productDto);

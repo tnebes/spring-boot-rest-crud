@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @Configuration
-@ComponentScan(basePackages = {"hr.tnebes.crud", "hr.tnebes.crud.config"})
+@ComponentScan(basePackages = {"hr.tnebes.crud"})
 @EntityScan(basePackages = "hr.tnebes.crud.models")
 @EnableJpaRepositories(basePackages = "hr.tnebes.crud.repository")
 @Slf4j
