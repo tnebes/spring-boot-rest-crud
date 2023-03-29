@@ -1,6 +1,7 @@
 package hr.tnebes.crud;
 
 import hr.tnebes.crud.services.FakerService;
+import hr.tnebes.crud.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,7 +26,7 @@ public class CrudApplication {
 
     @Bean
     public CommandLineRunner commandLineRunner(final FakerService fakerService) {
-        return args -> fakerService.generateFakeProducts(25);
+        return args -> fakerService.generateFakeProducts(Constants.FAKE_DATA_COUNT);
     }
 
 }
