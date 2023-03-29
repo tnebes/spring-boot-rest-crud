@@ -1,12 +1,10 @@
 package hr.tnebes.crud.controllers;
 
-import hr.tnebes.crud.dtos.ProductDto;
 import hr.tnebes.crud.models.ProductModel;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface ProductController {
+public interface ProductReadController {
 
     List<ProductModel> getAllProducts();
 
@@ -24,5 +22,4 @@ public interface ProductController {
 
     List<ProductModel> getProductsByAvailability(final String availability);
 
-    ResponseEntity<ProductModel> createProduct(final ProductDto productDto);
 }

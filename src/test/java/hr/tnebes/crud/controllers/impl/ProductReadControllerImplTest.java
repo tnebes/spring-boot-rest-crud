@@ -24,8 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductControllerImpl.class)
-class ProductControllerImplTest {
+@WebMvcTest(ProductReadControllerImpl.class)
+class ProductReadControllerImplTest {
 
     @Autowired
     private MockMvc mockMvc;

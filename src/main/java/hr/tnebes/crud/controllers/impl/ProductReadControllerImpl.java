@@ -1,7 +1,6 @@
 package hr.tnebes.crud.controllers.impl;
 
-import hr.tnebes.crud.controllers.ProductController;
-import hr.tnebes.crud.dtos.ProductDto;
+import hr.tnebes.crud.controllers.ProductReadController;
 import hr.tnebes.crud.mappers.ProductMapper;
 import hr.tnebes.crud.models.ProductModel;
 import hr.tnebes.crud.models.product.availability.ProductAvailability;
@@ -14,16 +13,9 @@ import hr.tnebes.crud.utils.PriceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +23,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(value = Constants.API_V1 + "/" + Constants.PRODUCT_ENTITY_NAME, produces = "application/json")
-public class ProductControllerImpl implements ProductController {
+public class ProductReadControllerImpl implements ProductReadController {
 
     private final ProductRepository productRepository;
 
@@ -40,20 +32,10 @@ public class ProductControllerImpl implements ProductController {
     private final ProductMapper productMapper;
 
     @Autowired
-    ProductControllerImpl(final ProductRepository productRepository, final ProductService productService, final ProductMapper productMapper) {
+    ProductReadControllerImpl(final ProductRepository productRepository, final ProductService productService, final ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.productService = productService;
         this.productMapper = productMapper;
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationException(final MethodArgumentNotValidException exception) {
-        final BindingResult result = exception.getBindingResult();
-        final List<String> errorMessages = result.getFieldErrors().stream()
-                .map(error -> error.getField() + " " + error.getDefaultMessage())
-                .toList();
-        log.error("Validation error: {}", errorMessages);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessages);
     }
 
     @GetMapping
@@ -139,18 +121,6 @@ public class ProductControllerImpl implements ProductController {
             case HRK -> this.productRepository.findAllByPriceHrk(bigDecimalPrice);
             case EUR -> this.productRepository.findAllByPriceEur(bigDecimalPrice);
         };
-    }
-
-    @Override
-    @PostMapping(consumes = "application/json", produces = "application/json", name = "createProduct", path = "/create")
-    public ResponseEntity<ProductModel> createProduct(@RequestBody @Valid final ProductDto productDto) {
-        try {
-            final ProductModel productModel = this.productMapper.toModel(productDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.productRepository.save(productModel));
-        } catch (final RuntimeException e) {
-            log.error("Error while creating product: {}{}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
 }
