@@ -1,17 +1,15 @@
 package hr.tnebes.crud.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-@Service
-public class PriceUtil {
+public final class PriceUtil {
 
     private PriceUtil() {
     }
 
-    public static BigDecimal stringToBigDecimal(String inputDecimalNumber) {
+    public static BigDecimal stringToBigDecimal(final String inputDecimalNumber) {
         if (!PriceUtil.validateInputString(inputDecimalNumber)) {
             throw new IllegalArgumentException("Invalid input decimal number: " + inputDecimalNumber);
         }

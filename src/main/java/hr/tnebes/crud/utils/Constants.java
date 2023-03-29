@@ -1,6 +1,6 @@
 package hr.tnebes.crud.utils;
 
-public class Constants {
+public final class Constants {
 
     public static final String CURRENT_LOCALE_NAME = "hr-HR";
 
