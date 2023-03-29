@@ -64,7 +64,7 @@ class ProductCreateControllerImplTest {
 
     @DisplayName("GIVEN an invalid product dto WHEN sent to controller THEN return an error message.")
     @Test
-    void testCreateProductReturnsExceptionOnInvalidProduct() throws Exception {
+    void testCreateProductReturnsExceptionOnEmptyProductDto() throws Exception {
         final ProductDto productDto = TestConstants.EMPTY_PRODUCT_DTO;
         this.mockMvc.perform(post("/api/v1/product/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -76,6 +76,23 @@ class ProductCreateControllerImplTest {
                 .andExpect(jsonPath("$", hasItem(containsString("code must not be blank"))))
                 .andExpect(jsonPath("$", hasItem(containsString("name must not be blank"))))
                 .andExpect(jsonPath("$", hasItem(containsString("quantity must not be null"))));
+        Mockito.verify(this.productMapper, never()).toModel(productDto);
+        Mockito.verify(this.productRepository, times(Constants.FAKE_DATA_COUNT)).save(Mockito.any(ProductModel.class));
+    }
+
+    @DisplayName("GIVEN an invalid product dto WHEN sent to controller THEN return an error message.")
+    @Test
+    void testCreateProductReturnsExceptionOnInvalidProductDto() throws Exception {
+        final ProductDto productDto = TestConstants.INVALID_PRODUCT_DTO;
+        this.mockMvc.perform(post("/api/v1/product/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(productDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$", hasItem(containsString("priceEur must be greater than or equal to 0"))))
+                .andExpect(jsonPath("$", hasItem(containsString("priceHrk must be greater than or equal to 0"))))
+                .andExpect(jsonPath("$", hasItem(containsString("code must not be blank"))))
+                .andExpect(jsonPath("$", hasItem(containsString("name must not be blank"))))
+                .andExpect(jsonPath("$", hasItem(containsString("quantity must be greater than or equal to 0"))));
         Mockito.verify(this.productMapper, never()).toModel(productDto);
         Mockito.verify(this.productRepository, times(Constants.FAKE_DATA_COUNT)).save(Mockito.any(ProductModel.class));
     }

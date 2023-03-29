@@ -13,9 +13,9 @@ public class TestConstants {
     public static final ProductDto EMPTY_PRODUCT_DTO = ProductDto.builder().build();
     public static final ProductModel EMPTY_PRODUCT_MODEL = new ProductModel();
     public static final ProductDto INVALID_PRODUCT_DTO = ProductDto.builder()
-            .code("123456")
-            .name("invalid product dto")
-            .description("invalid product dto description")
+            .code("")
+            .name("")
+            .description("")
             .availability(AVAILABLE)
             .priceEur(BigDecimal.valueOf(-1))
             .priceHrk(BigDecimal.valueOf(-1.5))
