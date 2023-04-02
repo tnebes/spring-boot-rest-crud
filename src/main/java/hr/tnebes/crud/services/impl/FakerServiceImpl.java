@@ -28,7 +28,7 @@ public class FakerServiceImpl implements FakerService {
 
     public List<ProductModel> generateFakeTestProductList() {
         final List<ProductModel> products = new ArrayList<>();
-        products.add(new ProductModel( 1L, "1234567800", "Test product 1", new BigDecimal("1.00"), new BigDecimal("0.50"), "", AVAILABLE, 1));
+        products.add(new ProductModel( 1L, "1234567800", "Test product 1", new BigDecimal("1.00"), new BigDecimal("0.50"), "Test description", AVAILABLE, 1));
         products.add(new ProductModel( 2L, "1234567801", "Test product 2", new BigDecimal("2.00"), new BigDecimal("1.00"), "", NOT_AVAILABLE, 2));
         products.add(new ProductModel( 3L, "1234567802", "Test product 3", new BigDecimal("3.00"), new BigDecimal("1.50"), "", AVAILABLE, 3));
         products.add(new ProductModel( 4L, "1234567803","Test product 4", new BigDecimal("4.00"), new BigDecimal("2.00"), "", NOT_AVAILABLE, -1));
