@@ -8,12 +8,14 @@ import hr.tnebes.crud.repository.ProductRepository;
 import hr.tnebes.crud.services.ProductService;
 import hr.tnebes.crud.utils.Constants;
 import hr.tnebes.crud.utils.CurrencyUtil;
-import hr.tnebes.crud.utils.LocaleUtil;
 import hr.tnebes.crud.utils.PriceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -50,7 +52,7 @@ public class ProductReadControllerImpl implements ProductReadController {
         if (!ids.matches(Constants.ID_REGEX_PATTERN)) {
             return Collections.emptyList();
         }
-        final List<Long> idsList = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
+        final List<Long> idsList = Arrays.stream(StringUtils.split(ids, ",")).map(Long::parseLong).toList();
         return this.productRepository.findAllById(idsList);
     }
 
@@ -76,19 +78,29 @@ public class ProductReadControllerImpl implements ProductReadController {
         if (StringUtils.isBlank(name)) {
             return Collections.emptyList();
         }
-        return this.productRepository.findAllByName(name.trim().toLowerCase(LocaleUtil.CURRENT_LOCALE));
+        return this.productRepository.findAllByName(StringUtils.toRootLowerCase(StringUtils.trim(name)));
     }
 
     @GetMapping(value = "/priceHrk/{priceHrk}")
     @Override
     public List<ProductModel> getProductsByPriceHrk(@PathVariable(name = "priceHrk") final String priceHrk) {
-        return this.getProductsByPrice(priceHrk, CurrencyUtil.Currency.HRK);
+        try {
+            return this.getProductsByPrice(priceHrk, CurrencyUtil.Currency.HRK);
+        } catch (final RuntimeException e) {
+            log.error("Error while getting products by price ", e);
+            return Collections.emptyList();
+        }
     }
 
     @GetMapping(value = "/priceEur/{priceEur}")
     @Override
     public List<ProductModel> getProductsByPriceEur(@PathVariable(name = "priceEur") final String priceEur) {
-        return this.getProductsByPrice(priceEur, CurrencyUtil.Currency.EUR);
+        try {
+            return this.getProductsByPrice(priceEur, CurrencyUtil.Currency.EUR);
+        } catch (final RuntimeException e) {
+            log.error("Error while getting products by price ", e);
+            return Collections.emptyList();
+        }
     }
 
     @GetMapping(value = "/description/{description}")
@@ -97,7 +109,7 @@ public class ProductReadControllerImpl implements ProductReadController {
         if (StringUtils.isBlank(description)) {
             return Collections.emptyList();
         }
-        return this.productRepository.findAllByDescription(description.trim().toLowerCase(LocaleUtil.CURRENT_LOCALE));
+        return this.productRepository.findAllByDescription(StringUtils.toRootLowerCase(StringUtils.trim(description)));
     }
 
     @GetMapping(value = "/availability/{availability}")
@@ -107,10 +119,10 @@ public class ProductReadControllerImpl implements ProductReadController {
             return Collections.emptyList();
         }
         try {
-            final ProductAvailability productAvailability = ProductAvailability.valueOf(availability.toUpperCase());
+            final ProductAvailability productAvailability = ProductAvailability.valueOf(StringUtils.toRootUpperCase(StringUtils.trim(availability)));
             return this.productRepository.findAllByAvailability(productAvailability);
         } catch (final IllegalArgumentException e) {
-            // TODO: return status code 4xx
+            log.error("Invalid availability: {}", availability);
             return Collections.emptyList();
         }
     }
