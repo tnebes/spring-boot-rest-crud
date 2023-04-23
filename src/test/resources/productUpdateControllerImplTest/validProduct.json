@@ -1,0 +1,10 @@
+{
+  "id": 24,
+  "code": "012301230123",
+  "name": "Updated product",
+  "priceHrk": 100.00,
+  "priceEur": 10.00,
+  "description": "This is an updated product",
+  "quantity": 50,
+  "availability": "AVAILABLE"
+}
