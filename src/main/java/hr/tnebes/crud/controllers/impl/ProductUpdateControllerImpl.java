@@ -38,13 +38,13 @@ public class ProductUpdateControllerImpl implements ProductUpdateController {
             if (this.productRepository.findById(productDto.getId()).isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.status(HttpStatus.OK).body(this.productRepository.save(productModel));
+            return ResponseEntity.ok().body(this.productRepository.save(productModel));
         } catch (final ConstraintViolationException e) {
             log.error("Received invalid product for update: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().build();
         } catch (final RuntimeException e) {
             log.error("Error while updating product: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 }

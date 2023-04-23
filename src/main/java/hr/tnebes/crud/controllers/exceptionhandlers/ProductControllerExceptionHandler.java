@@ -23,7 +23,7 @@ public class ProductControllerExceptionHandler {
                 .map(error -> error.getField() + " " + error.getDefaultMessage())
                 .toList();
         log.error("Validation error: {}", errorMessages);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessages);
+        return ResponseEntity.badRequest().body(errorMessages);
     }
 
 }

@@ -48,7 +48,7 @@ public class ProductCreateControllerImpl implements ProductCreateController {
         }
         catch (final RuntimeException e) {
             log.error("Error while creating product: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
