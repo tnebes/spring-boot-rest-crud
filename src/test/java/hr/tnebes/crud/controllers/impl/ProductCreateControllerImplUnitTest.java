@@ -18,6 +18,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.never;
@@ -94,6 +97,21 @@ class ProductCreateControllerImplUnitTest {
                 .andExpect(jsonPath("$", hasItem(containsString("quantity must be greater than or equal to 0"))));
         Mockito.verify(this.productMapper, never()).toModel(productDto);
         Mockito.verify(this.productRepository, times(Constants.FAKE_DATA_COUNT)).save(Mockito.any(ProductModel.class));
+    }
+
+    @DisplayName("GIVEN a valid product dto with a code identical to an existing product WHEN sent to controller THEN return an error message.")
+    @Test
+    void testCreateProductReturnsExceptionOnDuplicateProductCode() throws Exception {
+        final ProductDto productDto = TestConstants.VALID_PRODUCT_DTO;
+        final ProductModel productModel = TestConstants.VALID_PRODUCT_MODEL;
+        Mockito.when(this.productMapper.toModel(productDto)).thenReturn(productModel);
+        Mockito.when(this.productRepository.findByCode(productModel.getCode())).thenReturn(Optional.of(productModel));
+        this.mockMvc.perform(post("/api/v1/product/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(productDto)))
+                .andExpect(status().isConflict());
+        Mockito.verify(this.productMapper, times(1)).toModel(productDto);
+        Mockito.verify(this.productRepository, never()).save(productModel);
     }
 
 }
