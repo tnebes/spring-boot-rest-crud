@@ -1,6 +1,6 @@
 package hr.tnebes.crud.controllers.impl;
 
-import hr.tnebes.crud.controllers.ProductCreateController;
+import hr.tnebes.crud.controllers.ProductUpdateController;
 import hr.tnebes.crud.dtos.ProductDto;
 import hr.tnebes.crud.mappers.ProductMapper;
 import hr.tnebes.crud.models.ProductModel;
@@ -21,35 +21,33 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping(value = Constants.API_V1 + "/" + Constants.PRODUCT_ENTITY_NAME, produces = "application/json", consumes = "application/json")
-public class ProductCreateControllerImpl implements ProductCreateController {
+public class ProductUpdateControllerImpl implements ProductUpdateController {
 
     private final ProductRepository productRepository;
 
     private final ProductMapper productMapper;
 
     @Autowired
-    ProductCreateControllerImpl(final ProductRepository productRepository, final ProductMapper productMapper) {
-        this.productRepository = productRepository;
+    ProductUpdateControllerImpl(final ProductMapper productMapper, final ProductRepository productRepository) {
         this.productMapper = productMapper;
+        this.productRepository = productRepository;
     }
 
     @Override
-    @PostMapping(path = "/create")
-    public ResponseEntity<ProductModel> createProduct(@RequestBody @Valid final ProductDto productDto) {
+    @PostMapping(value = "/update")
+    public ResponseEntity<ProductModel> updateProduct(@RequestBody @Valid final ProductDto productDto) {
         try {
             final ProductModel productModel = this.productMapper.toModel(productDto);
-            if (this.productRepository.findByCode(productModel.getCode()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            if (this.productRepository.findById(productModel.getId()).isEmpty()) {
+                return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.productRepository.save(productModel));
+            return ResponseEntity.status(HttpStatus.OK).body(this.productRepository.save(productModel));
         } catch (final ConstraintViolationException e) {
-            log.error("Received invalid product: {}", e.getMessage(), e);
+            log.error("Received invalid product for update: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        }
-        catch (final RuntimeException e) {
-            log.error("Error while creating product: {}", e.getMessage(), e);
+        } catch (final RuntimeException e) {
+            log.error("Error while updating product: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 }

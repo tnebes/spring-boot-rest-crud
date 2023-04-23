@@ -26,7 +26,7 @@ public class FakerServiceImpl implements FakerService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductModel> generateFakeTestProductList() {
+    public List<ProductModel> generatePredeterminedFakeTestProductList() {
         final List<ProductModel> products = new ArrayList<>();
         products.add(new ProductModel( 1L, "1234567800", "Test product 1", new BigDecimal("1.00"), new BigDecimal("0.50"), "Test description", AVAILABLE, 1));
         products.add(new ProductModel( 2L, "1234567801", "Test product 2", new BigDecimal("2.00"), new BigDecimal("1.00"), "", NOT_AVAILABLE, 2));
@@ -55,7 +55,7 @@ public class FakerServiceImpl implements FakerService {
 
     @Override
     public void generateTestProducts() {
-        final List<ProductModel> products = this.generateFakeTestProductList();
+        final List<ProductModel> products = this.generatePredeterminedFakeTestProductList();
         this.productRepository.saveAll(products);
     }
 }

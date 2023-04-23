@@ -4,7 +4,6 @@ import hr.tnebes.crud.dtos.ProductDto;
 import hr.tnebes.crud.models.ProductModel;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;

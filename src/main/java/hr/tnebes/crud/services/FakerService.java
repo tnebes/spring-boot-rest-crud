@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface FakerService {
 
-    List<ProductModel> generateFakeTestProductList();
+    List<ProductModel> generatePredeterminedFakeTestProductList();
 
     void generateFakeProducts(int count);
 
