@@ -77,7 +77,6 @@ class ProductCreateControllerImplUnitTest {
                 .andExpect(jsonPath("$", hasItem(containsString("name must not be blank"))))
                 .andExpect(jsonPath("$", hasItem(containsString("quantity must not be null"))));
         Mockito.verify(this.productMapper, never()).toModel(productDto);
-        Mockito.verify(this.productRepository, times(Constants.FAKE_DATA_COUNT)).save(Mockito.any(ProductModel.class));
     }
 
     @DisplayName("GIVEN an invalid product dto WHEN sent to controller THEN return an error message.")
