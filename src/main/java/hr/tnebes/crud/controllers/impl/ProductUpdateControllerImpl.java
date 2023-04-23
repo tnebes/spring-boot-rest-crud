@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -34,11 +31,11 @@ public class ProductUpdateControllerImpl implements ProductUpdateController {
     }
 
     @Override
-    @PostMapping(value = "/update")
+    @PutMapping(value = "/update")
     public ResponseEntity<ProductModel> updateProduct(@RequestBody @Valid final ProductDto productDto) {
         try {
             final ProductModel productModel = this.productMapper.toModel(productDto);
-            if (this.productRepository.findById(productModel.getId()).isEmpty()) {
+            if (this.productRepository.findById(productDto.getId()).isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
             return ResponseEntity.status(HttpStatus.OK).body(this.productRepository.save(productModel));

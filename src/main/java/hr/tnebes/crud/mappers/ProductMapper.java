@@ -38,6 +38,7 @@ public class ProductMapper {
             throw new ConstraintViolationException(violations);
         }
         return new ProductDto(
+                productModel.getId(),
                 productModel.getCode(),
                 productModel.getName(),
                 productModel.getPriceHrk(),

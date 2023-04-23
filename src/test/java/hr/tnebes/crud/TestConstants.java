@@ -22,7 +22,7 @@ public class TestConstants {
             .quantity(-100)
             .build();
     public static final ProductModel INVALID_PRODUCT_MODEL = new ProductModel( 1000L, "123456", "invalid product 1", new BigDecimal("-1.00"), new BigDecimal("-0.50"), "invalid product 1", AVAILABLE, -1);
-    public static final ProductDto VALID_PRODUCT_DTO = new ProductDto( "1234567800", "Test product 1", new BigDecimal("1.00"), new BigDecimal("0.50"), "", AVAILABLE, 1);
+    public static final ProductDto VALID_PRODUCT_DTO = new ProductDto( 0l, "1234567800", "Test product 1", new BigDecimal("1.00"), new BigDecimal("0.50"), "", AVAILABLE, 1);
     public static final ProductModel VALID_PRODUCT_MODEL = new ProductModel( 1000L, "1234567800", "Test product 1", new BigDecimal("1.00"), new BigDecimal("0.50"), "", AVAILABLE, 1);
 
     private TestConstants() {
