@@ -48,7 +48,7 @@ class ProductReadControllerImplUnitTest {
 
     @BeforeEach
     void setUpBeforeEach() {
-        this.mockedProductList = this.fakerService.generateFakeTestProductList();
+        this.mockedProductList = this.fakerService.generatePredeterminedFakeTestProductList();
         Mockito.when(this.productRepository.findAll()).thenReturn(this.mockedProductList);
     }
 

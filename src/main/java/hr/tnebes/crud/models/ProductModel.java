@@ -16,6 +16,7 @@ import static hr.tnebes.crud.utils.Constants.PRODUCT_ENTITY_NAME;
 @Entity(name = PRODUCT_ENTITY_NAME)
 @Table(indexes = {@Index(columnList = "code"), @Index(columnList = "availability")})
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor

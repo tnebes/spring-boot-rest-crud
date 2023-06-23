@@ -1,6 +1,6 @@
 package hr.tnebes.crud.controllers.impl;
 
-import hr.tnebes.crud.controllers.ProductCreateController;
+import hr.tnebes.crud.controllers.ProductUpdateController;
 import hr.tnebes.crud.dtos.ProductDto;
 import hr.tnebes.crud.mappers.ProductMapper;
 import hr.tnebes.crud.models.ProductModel;
@@ -8,48 +8,49 @@ import hr.tnebes.crud.repository.ProductRepository;
 import hr.tnebes.crud.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequestMapping(value = Constants.API_V1 + "/" + Constants.PRODUCT_ENTITY_NAME, produces = "application/json", consumes = "application/json")
-public class ProductCreateControllerImpl implements ProductCreateController {
+public class ProductUpdateControllerImpl implements ProductUpdateController {
 
     private final ProductRepository productRepository;
 
     private final ProductMapper productMapper;
 
     @Autowired
-    ProductCreateControllerImpl(final ProductRepository productRepository, final ProductMapper productMapper) {
-        this.productRepository = productRepository;
+    ProductUpdateControllerImpl(final ProductMapper productMapper, final ProductRepository productRepository) {
         this.productMapper = productMapper;
+        this.productRepository = productRepository;
     }
 
     @Override
-    @PostMapping(path = "/create")
-    public ResponseEntity<ProductModel> createProduct(@RequestBody @Valid final ProductDto productDto) {
+    @PutMapping(value = "/update")
+    public ResponseEntity<ProductModel> updateProduct(@RequestBody @Valid final ProductDto productDto) {
         try {
-            final ProductModel productModel = this.productMapper.toModel(productDto);
-            if (this.productRepository.findByCode(productModel.getCode()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            final Optional<ProductModel> productModel = this.productRepository.findById(productDto.getId());
+            if (productModel.isEmpty()) {
+                log.error("Product with id {} does not exist.", productDto.getId());
+                return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.productRepository.save(productModel));
+            final ProductModel product = productModel.get();
+            this.productMapper.updateProductFromDto(productDto, product);
+            return ResponseEntity.ok().body(this.productRepository.save(product));
         } catch (final ConstraintViolationException e) {
-            log.error("Received invalid product: {}", e.getMessage(), e);
+            log.error("Received invalid product for update: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        }
-        catch (final RuntimeException e) {
-            log.error("Error while creating product: {}", e.getMessage(), e);
+        } catch (final RuntimeException e) {
+            log.error("Error while updating product: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }
-
 }

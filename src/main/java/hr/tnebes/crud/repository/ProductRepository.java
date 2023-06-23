@@ -10,12 +10,13 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductModel, Long> {
     @Query("SELECT p FROM " + Constants.PRODUCT_ENTITY_NAME + " p WHERE p.code = :code")
-    ProductModel findByCode(@Param("code") final String s);
+    Optional<ProductModel> findByCode(@Param("code") final String s);
 
     @Query("SELECT p FROM " + Constants.PRODUCT_ENTITY_NAME + " p WHERE p.code IN :codes")
     List<ProductModel> findAllByCodes(@Param("codes") final List<String> codes);
