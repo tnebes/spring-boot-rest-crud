@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -36,11 +37,14 @@ public class ProductUpdateControllerImpl implements ProductUpdateController {
     @PutMapping(value = "/update")
     public ResponseEntity<ProductModel> updateProduct(@RequestBody @Valid final ProductDto productDto) {
         try {
-            final ProductModel productModel = this.productMapper.toModel(productDto);
-            if (this.productRepository.findById(productDto.getId()).isEmpty()) {
+            final Optional<ProductModel> productModel = this.productRepository.findById(productDto.getId());
+            if (productModel.isEmpty()) {
+                log.error("Product with id {} does not exist.", productDto.getId());
                 return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.ok().body(this.productRepository.save(productModel));
+            final ProductModel product = productModel.get();
+            this.productMapper.updateProductFromDto(productDto, product);
+            return ResponseEntity.ok().body(this.productRepository.save(product));
         } catch (final ConstraintViolationException e) {
             log.error("Received invalid product for update: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().build();

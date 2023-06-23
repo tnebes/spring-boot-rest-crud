@@ -2,7 +2,6 @@ package hr.tnebes.crud.mappers;
 
 import hr.tnebes.crud.dtos.ProductDto;
 import hr.tnebes.crud.models.ProductModel;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -46,5 +45,20 @@ public class ProductMapper {
                 productModel.getDescription(),
                 productModel.getAvailability(),
                 productModel.getQuantity());
+    }
+
+
+    public void updateProductFromDto(final ProductDto productDto, final ProductModel productModel) {
+        final Set<ConstraintViolation<ProductDto>> violations = this.validator.validate(productDto);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+        productModel.setCode(productDto.getCode());
+        productModel.setName(productDto.getName());
+        productModel.setPriceHrk(productDto.getPriceHrk());
+        productModel.setPriceEur(productDto.getPriceEur());
+        productModel.setDescription(productDto.getDescription());
+        productModel.setAvailability(productDto.getAvailability());
+        productModel.setQuantity(productDto.getQuantity());
     }
 }
